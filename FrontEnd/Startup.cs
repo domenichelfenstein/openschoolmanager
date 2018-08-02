@@ -1,4 +1,4 @@
-﻿namespace SchoolManager
+﻿namespace FrontEnd
 {
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -18,7 +18,7 @@
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStaticFiles();
+            //app.UseStaticFiles();
 
             app.Run(async (context) =>
             {

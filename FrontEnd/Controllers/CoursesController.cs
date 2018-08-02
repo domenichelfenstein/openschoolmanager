@@ -1,5 +1,5 @@
 ﻿
-namespace SchoolManager.Controllers
+namespace FrontEnd.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
 

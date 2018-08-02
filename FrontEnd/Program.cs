@@ -1,4 +1,4 @@
-﻿namespace SchoolManager
+﻿namespace FrontEnd
 {
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
