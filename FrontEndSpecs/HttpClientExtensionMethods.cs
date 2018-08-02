@@ -2,6 +2,7 @@
 {
     using System.IO;
     using System.Net.Http;
+    using System.Text;
     using System.Threading.Tasks;
 
     public static class HttpClientExtensionMethods
@@ -23,7 +24,9 @@
             var response = await client.PostAsync(
                 urlPart,
                 new StringContent(
-                    body));
+                    body,
+                    Encoding.UTF8,
+                    "application/json"));
 
             return response;
         }
