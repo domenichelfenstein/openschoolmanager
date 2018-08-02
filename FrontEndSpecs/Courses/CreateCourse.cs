@@ -1,8 +1,8 @@
 ﻿namespace FrontEnd.Courses
 {
+    using System;
     using System.Net;
     using System.Net.Http;
-    using System.Net.Http.Headers;
     using Backend;
     using Fakes;
     using FluentAssertions;
@@ -16,17 +16,21 @@
         private TestServer server;
         private HttpClient client;
         private FakeBackEndFacade backend;
+        private FakeGuidGenerator guidGenerator;
 
         [Background]
         public void Background()
         {
             "es existiert ein Server".x(() =>
             {
+                this.guidGenerator = new FakeGuidGenerator();
                 this.backend = new FakeBackEndFacade();
                 var serverHostBuilder = new WebHostBuilder();
                 serverHostBuilder
                     .ConfigureServices(s =>
-                        s.AddSingleton<IBackEndFacade>(p => this.backend))
+                        s
+                            .AddSingleton<IGuidGenerator>(p => this.guidGenerator)
+                            .AddSingleton<IBackEndFacade>(p => this.backend))
                     .UseStartup<Startup>();
 
                 this.server = new TestServer(serverHostBuilder);
@@ -39,9 +43,13 @@
             HttpResponseMessage response)
         {
             var name = "some name";
+            var id = Guid.Parse("6C9E6EC4-8E28-4E88-8184-351729302580");
             var body = $@"{{
                 'name': '{name}'
             }}";
+
+            "_".x(()
+                => this.guidGenerator.SetNext(id));
 
             "wenn auf den Server ein neuer Kurs gepostet wird".x(async ()
                 => response = await this.client.Post(
@@ -51,8 +59,13 @@
             "soll die Page erreichbar sein".x(()
                 => response.StatusCode.Should().Be(HttpStatusCode.OK));
 
-            "soll das BackEnd aufgerufen worden sein".x(()
-                => this.backend.CreateCourseName.Should().Be(name));
+            "soll der Namen an das BackEnd übergeben werden".x(()
+                => this.backend
+                    .CreateCourseName.Should().Be(name));
+
+            "soll eine ID an das BackEnd übergeben werden".x(()
+                => this.backend
+                    .CreateCourseId.Should().Be(id));
         }
     }
 }

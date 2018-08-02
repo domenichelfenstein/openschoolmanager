@@ -10,11 +10,14 @@ namespace FrontEnd.Controllers
     public class CoursesController : Controller
     {
         private readonly IBackEndFacade backend;
+        private readonly IGuidGenerator guidGenerator;
 
         public CoursesController(
-            IBackEndFacade backend)
+            IBackEndFacade backend,
+            IGuidGenerator guidGenerator)
         {
             this.backend = backend;
+            this.guidGenerator = guidGenerator;
         }
 
         [HttpPost]
@@ -22,7 +25,8 @@ namespace FrontEnd.Controllers
             [FromBody]Create create)
         {
             await this.backend.CreateCourse(
-                create.Name);
+                create.Name,
+                this.guidGenerator.Generate());
             return this.Ok();
         }
 

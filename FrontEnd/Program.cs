@@ -15,7 +15,9 @@
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureServices(s =>
-                    s.AddSingleton<IBackEndFacade>(p => new BackEndFacade()))
+                    s
+                        .AddSingleton<IGuidGenerator>(p => new GuidGenerator())
+                        .AddSingleton<IBackEndFacade>(p => new BackEndFacade()))
                 .UseStartup<Startup>();
     }
 }
