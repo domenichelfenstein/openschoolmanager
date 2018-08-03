@@ -7,7 +7,7 @@
 
     public class FakeBackEndFacade : IBackEndFacade
     {
-        private Action<string> onAddCourse;
+        private Action<string> onAddCourse = _ => { };
 
         public Task CreateCourse(
             string name,
