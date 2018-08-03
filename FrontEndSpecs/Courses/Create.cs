@@ -11,7 +11,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Xbehave;
 
-    public class CreateCourse
+    public class Create
     {
         private TestServer server;
         private HttpClient client;

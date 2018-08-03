@@ -21,7 +21,7 @@
 
             app.UseMvc();
 
-            //app.UseStaticFiles();
+            app.UseStaticFiles();
         }
     }
 }
