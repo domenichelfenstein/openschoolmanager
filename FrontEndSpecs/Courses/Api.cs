@@ -11,7 +11,7 @@
     using Microsoft.Extensions.DependencyInjection;
     using Xbehave;
 
-    public class Create
+    public class Api
     {
         private TestServer server;
         private HttpClient client;
@@ -66,6 +66,34 @@
             "soll eine ID an das BackEnd übergeben werden".x(()
                 => this.backend
                     .CreateCourseId.Should().Be(id));
+        }
+
+        [Scenario]
+        public void KurseAbrufen(
+            HttpResponseMessage response)
+        {
+            var courses = new []
+            {
+                new Course("test1"), 
+                new Course("test2")
+            };
+            var expectedBody = $@"[
+                {{ 'name': '{courses[0].Name}' }},
+                {{ 'name': '{courses[1].Name}' }}
+            ]";
+
+            "_".x(()
+                => this.backend.Courses = courses);
+
+            "wenn auf den Server ein neuer Kurs gepostet wird".x(async ()
+                => response = await this.client.Get(
+                    "api/courses"));
+
+            "soll die Page erreichbar sein".x(()
+                => response.StatusCode.Should().Be(HttpStatusCode.OK));
+
+            "sollen die Kurse zurückgegeben werden".x(()
+                => response.GetContent().ShouldBeJson(expectedBody));
         }
     }
 }

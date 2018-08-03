@@ -21,7 +21,14 @@
 
             app.UseMvc();
 
-            app.UseStaticFiles();
+            app.UseDefaultFiles(new DefaultFilesOptions
+            {
+                RequestPath = "/frontend"
+            });
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                RequestPath = "/frontend"
+            });
         }
     }
 }

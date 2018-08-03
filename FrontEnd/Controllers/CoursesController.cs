@@ -1,6 +1,8 @@
 ﻿
 namespace FrontEnd.Controllers
 {
+    using System;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Backend;
     using Microsoft.AspNetCore.Mvc;
@@ -28,6 +30,14 @@ namespace FrontEnd.Controllers
                 create.Name,
                 this.guidGenerator.Generate());
             return this.Ok();
+        }
+
+        [HttpGet]
+        public async Task<IReadOnlyCollection<Course>> GetAll()
+        {
+            var courses = await this.backend.GetAllCourses();
+
+            return courses;
         }
 
         public struct Create

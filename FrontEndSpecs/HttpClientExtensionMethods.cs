@@ -1,9 +1,14 @@
 ﻿namespace FrontEnd
 {
+    using System;
     using System.IO;
     using System.Net.Http;
     using System.Text;
     using System.Threading.Tasks;
+    using FluentAssertions;
+    using FluentAssertions.Collections;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
 
     public static class HttpClientExtensionMethods
     {
@@ -31,10 +36,27 @@
             return response;
         }
 
-        public static async Task<Stream> GetContent(
+        public static async Task<JToken> GetJson(
             this HttpResponseMessage response)
         {
-            return await response.Content.ReadAsStreamAsync();
+            var content = await response.Content.ReadAsStringAsync();
+            return JToken.Parse(content);
+        }
+
+        public static async Task<string> GetContent(
+            this HttpResponseMessage response)
+        {
+            return await response.Content.ReadAsStringAsync();
+        }
+
+        public static async Task<AndConstraint<GenericCollectionAssertions<JToken>>> ShouldBeJson(
+            this Task<string> contentTask,
+            string other)
+        {
+            var content = await contentTask;
+            var jContent = JToken.Parse(content);
+            var jOther = JToken.Parse(other);
+            return jContent.Should().BeEquivalentTo(jOther);
         }
     }
 }
