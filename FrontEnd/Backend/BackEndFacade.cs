@@ -20,5 +20,10 @@
         {
             return null;
         }
+
+        public Task CreateSelfie(Selfie selfie)
+        {
+            return null;
+        }
     }
 }

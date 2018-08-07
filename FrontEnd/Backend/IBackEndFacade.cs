@@ -13,5 +13,8 @@
         Task<IReadOnlyCollection<Course>> GetAllCourses();
         
         Task<Course> GetCourse(Guid id);
+
+        Task CreateSelfie(
+            Selfie selfie);
     }
 }

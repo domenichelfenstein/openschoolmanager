@@ -1,0 +1,87 @@
+<h1></h1>
+<input type="text" name="firstName" />
+<input type="text" name="lastName" />
+<input type="file" capture="camera" accept="image/*" name="selfie" />
+<img class="img-container" />
+<button type="button">OK</button>
+
+<script src="lib/posting.js"></script>
+<script>
+    var courseId = null;
+
+    function getCourse() {
+        var currentUrl = document.URL,
+        urlParts   = currentUrl.split('#courses/');
+            
+        return (urlParts.length > 1) ? urlParts[1] : null;
+    }
+
+    function getServerUrl() {
+        return document.URL.split('frontend/')[0];
+    }
+
+    var course = getCourse();
+    fetch("/api/courses/" + course)
+        .then(r => r.json())
+        .then(json => {
+            document.querySelector("h1").innerText = json.name;
+            courseId = json.id;
+        });
+
+
+    var fileInput = document.querySelector("input[name='selfie']");
+    fileInput.onchange = function() {
+        if (fileInput.files.length === 0) { 
+            return; 
+        }
+
+        var file = fileInput.files[0];
+        var fileReader = new FileReader();
+        fileReader.onload = function(evnt) {
+            var image = new Image();
+
+            image.onload = function() {
+                var canvas = document.createElement("canvas");
+                var context = canvas.getContext("2d");
+                canvas.width = 800 / image.height * image.width;
+                canvas.height = 800;
+                context.drawImage(image,
+                    0,
+                    0,
+                    image.width,
+                    image.height,
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+                document.querySelector(".img-container").src = canvas.toDataURL("image/jpg");
+            }
+
+            image.src = evnt.target.result;
+        }
+
+        fileReader.readAsDataURL(file);
+    }
+
+    var toBase64 = function(image) {
+        var dataURL = image.src;
+        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+    }
+
+    var okButton = document.querySelector("button");
+    okButton.onclick = function() {
+        var body = {
+            courseId: courseId,
+            studentFirstname: document.querySelector("input[name='firstName']").value,
+            stundetLastname: document.querySelector("input[name='lastName']").value,
+            imageInBase64: toBase64(document.querySelector("img")),
+        };
+
+        postData("/api/selfies", body)
+        .then(() => {
+            document.querySelector("h1").innerText = "Geklappt! Danke!";
+        });
+    }
+</script>

@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
+    using System.IO;
     using System.Linq;
     using Backend;
     using FluentAssertions;
@@ -101,6 +103,81 @@
 
             "soll ID des Kurs' enthalten sein".x(()
                 => this.browser.ScanForQrCodeContaining(course.Id.ToString()));
+        }
+
+        [Scenario]
+        public void UnbekannteSeite()
+        {
+            "wenn eine unbekannte Seite aufgerufen wird".x(()
+                => this.browser.Open(
+                    this.server,
+                    "/frontend/#sadfl"));
+
+            "Inhalt".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector("h1")).Text.Should().Contain("404")));
+        }
+
+        [Scenario]
+        public void SelfieMachen()
+        {
+            var course = new Course(
+                Guid.Parse("CAECCA78-2706-4E5B-B3D8-FC91C77F62C9"),
+                "test1");
+
+            var portraitPath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "Data",
+                "portrait.jpg");
+
+            "es existieren Kurse".x(()
+                => this.backend.Course = course);
+
+            "wenn die Selfie-Seite aufgerufen wird".x(()
+                => this.browser.Open(
+                    this.server,
+                    $"/frontend/#takeselfie/{course.Id}"));
+
+            "Inhalt".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector("h1")).Text.Should().Contain(course.Name)));
+
+            "wenn ein Vorname gesetzt wird".x(()
+                => this.browser.FindElements(By.XPath("//input[@type='text']")).First().SendKeys("MeinVorname"));
+
+            "wenn ein Nachname gesetzt wird".x(()
+                => this.browser.FindElements(By.XPath("//input[@type='text']")).Last().SendKeys("MeinNachname"));
+
+            "wenn ein Bild gesetzt wird".x(()
+                => this.browser.FindElement(By.XPath("//input[@type='file']")).SendKeys(portraitPath));
+
+            "soll ein Vorschaubild mit der richtigen Grösse erscheinen".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector("img")).Size.Height.Should().Be(800)));
+
+            "_".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector("img")).Size.Width.Should().Be(533)));
+
+            "wenn auf OK geklickt wird".x(()
+                => this.browser.FindElement(By.CssSelector("button")).Click());
+
+            "soll der Benutzer verdankt werden".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector("h1")).Text.Should().Contain("Danke")));
+
+            "sollen die Daten gespeichert werden".x(()
+                =>
+            {
+                this.backend.SavedSelfie.CourseId.Should().Be(course.Id);
+                this.backend.SavedSelfie.StudentFirstname.Should().Be("MeinVorname");
+                this.backend.SavedSelfie.StundetLastname.Should().Be("MeinNachname");
+                
+                var byteArray = Convert.FromBase64String(this.backend.SavedSelfie.ImageInBase64);
+                var memStream = new MemoryStream(byteArray);
+                var image = new Bitmap(memStream);
+                image.Size.Should().Be(new Size(533, 800));
+            });
         }
     }
 }

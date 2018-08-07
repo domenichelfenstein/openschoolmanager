@@ -32,6 +32,12 @@
             return Task.FromResult(this.Course);
         }
 
+        public Task CreateSelfie(Selfie selfie)
+        {
+            this.SavedSelfie = selfie;
+            return Task.CompletedTask;
+        }
+
         public string CreateCourseName { get; private set; }
 
         public Guid CreateCourseId { get; private set; }
@@ -41,6 +47,8 @@
         public Course Course { get; set; }
 
         public Guid GetCourseId { get; private set; }
+
+        public Selfie SavedSelfie { get; set; }
 
         public void OnAddCourse(Action<string> func)
         {

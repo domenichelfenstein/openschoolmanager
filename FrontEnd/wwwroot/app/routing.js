@@ -1,13 +1,14 @@
 var routes = [
-    { from: /courses\/.*/, to: "app/course.html" },
-    { from: /.*/, to: "app/courses.html" }
+    { from: /courses\/.*/,      to: "app/pages/course.html" },
+    { from: /takeselfie\/.*/,   to: "app/pages/takeselfie.html" },
+    { from: /^$/,               to: "app/pages/courses.html" },
+    { from: /.*/,               to: "app/pages/pagenotfound.html" }
 ];
 
 var getRoute = function(input) {
     for (let i = 0; i < routes.length; i++) {
         const r = routes[i];
         const result = r.from.exec(input);
-        console.log(result);
         if(result) {
             return r.to;
         }
@@ -20,7 +21,7 @@ function getAnchor() {
     var currentUrl = document.URL,
 	urlParts   = currentUrl.split('#');
 		
-    return (urlParts.length > 1) ? urlParts[1] : "courses";
+    return (urlParts.length > 1) ? urlParts[1] : "";
 }
 
 var route = function(route) {
