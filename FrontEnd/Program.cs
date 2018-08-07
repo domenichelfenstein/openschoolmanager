@@ -18,6 +18,7 @@
                     s
                         .AddSingleton<IGuidGenerator>(p => new GuidGenerator())
                         .AddSingleton<IBackEndFacade>(p => new BackEndFacade()))
+                .UseUrls("http://*:52482")
                 .UseStartup<Startup>();
     }
 }

@@ -1,11 +1,7 @@
 ﻿namespace FrontEnd
 {
     using System;
-    using System.Linq;
-    using Backend;
-    using Fakes;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Hosting.Server.Features;
     using Microsoft.AspNetCore.Mvc.Testing;
     using Microsoft.AspNetCore.TestHost;
     using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +25,7 @@
                 .ConfigureServices(this.configServices)
                 .Build();
             this.host.Start();
-            RootUri = this.host.ServerFeatures.Get<IServerAddressesFeature>().Addresses.LastOrDefault();
+            RootUri = "http://localhost:52482/";
 
             return new TestServer(
                 new WebHostBuilder()
