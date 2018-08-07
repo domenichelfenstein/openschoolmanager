@@ -133,7 +133,7 @@
 
             "soll eine Liste vorhanden sein".x(()
                 => this.wait.For(
-                    () => this.browser.FindElements(By.CssSelector("li")).Select(x => x.FindElement(By.CssSelector("span")).Text).Should().BeEquivalentTo(students.Select(x => $"{x.StudentFirstname} {x.StundetLastname}"))));
+                    () => this.browser.FindElements(By.CssSelector("li")).Select(x => x.FindElement(By.CssSelector("span")).Text).Should().BeEquivalentTo(students.Select(x => $"{x.Firstname} {x.Lastname}"))));
 
             "soll eine Liste vorhanden sein".x(()
                 => this.wait.For(
@@ -215,8 +215,8 @@
                 =>
             {
                 this.backend.SavedStudent.CourseId.Should().Be(course.Id);
-                this.backend.SavedStudent.StudentFirstname.Should().Be("MeinVorname");
-                this.backend.SavedStudent.StundetLastname.Should().Be("MeinNachname");
+                this.backend.SavedStudent.Firstname.Should().Be("MeinVorname");
+                this.backend.SavedStudent.Lastname.Should().Be("MeinNachname");
                 
                 var byteArray = Convert.FromBase64String(this.backend.SavedStudent.ImageInBase64);
                 var memStream = new MemoryStream(byteArray);

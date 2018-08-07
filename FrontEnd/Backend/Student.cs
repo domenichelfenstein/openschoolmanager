@@ -6,21 +6,21 @@
     {
         public Student(
             Guid courseId,
-            string studentFirstname,
-            string stundetLastname,
+            string firstname,
+            string lastname,
             string imageInBase64)
         {
             this.CourseId = courseId;
-            this.StudentFirstname = studentFirstname;
-            this.StundetLastname = stundetLastname;
+            this.Firstname = firstname;
+            this.Lastname = lastname;
             this.ImageInBase64 = imageInBase64;
         }
 
         public Guid CourseId { get; }
 
-        public string StudentFirstname { get; }
+        public string Firstname { get; }
 
-        public string StundetLastname { get; }
+        public string Lastname { get; }
 
         public string ImageInBase64 { get; }
     }
