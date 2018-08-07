@@ -1,5 +1,6 @@
 <h1></h1>
 <qr-code data="" format="svg" style="display: none"></qr-code>
+<a class="students">Übersicht</a>
 
 <script src="lib/webcomponents-loader.js"></script>
 <script src="lib/custom-elements-es5-adapter.js"></script>
@@ -29,5 +30,7 @@
             var qrCode = document.querySelector("qr-code");
             qrCode.data = linkUrl;
             qrCode.style.display = "block";
+
+            document.querySelector("a").href = "#students/" + json.id;
         });
 </script>

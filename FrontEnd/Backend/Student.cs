@@ -2,9 +2,9 @@
 {
     using System;
 
-    public struct Selfie
+    public struct Student
     {
-        public Selfie(
+        public Student(
             Guid courseId,
             string studentFirstname,
             string stundetLastname,

@@ -32,10 +32,18 @@
             return Task.FromResult(this.Course);
         }
 
-        public Task CreateSelfie(Selfie selfie)
+        public Task CreateStudent(Student student)
         {
-            this.SavedSelfie = selfie;
+            this.SavedStudent = student;
             return Task.CompletedTask;
+        }
+
+        public Task<IReadOnlyCollection<Student>> GetStudents(Guid courseId)
+        {
+            this.GetStudentsByCourseId = courseId;
+
+            return Task.FromResult<IReadOnlyCollection<Student>>(
+                this.Students);
         }
 
         public string CreateCourseName { get; private set; }
@@ -48,7 +56,11 @@
 
         public Guid GetCourseId { get; private set; }
 
-        public Selfie SavedSelfie { get; set; }
+        public Student SavedStudent { get; set; }
+        
+        public Student[] Students { get; set; }
+
+        public Guid GetStudentsByCourseId { get; set; }
 
         public void OnAddCourse(Action<string> func)
         {

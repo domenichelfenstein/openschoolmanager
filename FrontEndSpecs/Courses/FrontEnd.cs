@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Drawing.Imaging;
     using System.IO;
     using System.Linq;
     using Backend;
@@ -83,8 +84,27 @@
                 Guid.Parse("CAECCA78-2706-4E5B-B3D8-FC91C77F62C9"),
                 "test1");
 
+            var portraitPath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "Data",
+                "portrait.jpg");
+
+            var base64 = GetImageAsBase64Jpeg(
+                portraitPath,
+                533,
+                800);
+
+            var students = new[]
+            {
+                new Student(course.Id, "Max", "Mustermann", base64), 
+                new Student(course.Id, "Yvette", "Musterfrau", base64), 
+            };
+
             "es existieren Kurse".x(()
                 => this.backend.Course = course);
+
+            "es existieren Schüler".x(()
+                => this.backend.Students = students);
 
             "wenn die Kurs-Seite aufgerufen wird".x(()
                 => this.browser.Open(
@@ -103,6 +123,31 @@
 
             "soll ID des Kurs' enthalten sein".x(()
                 => this.browser.ScanForQrCodeContaining(course.Id.ToString()));
+
+            "soll ein Link zur Student-Übersicht enthalten sein".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector("a.students")).Text.Should().Contain("Übersicht")));
+
+            "wenn auf den Link geklickt wird".x(()
+                => this.browser.FindElement(By.CssSelector("a.students")).Click());
+
+            "soll eine Liste vorhanden sein".x(()
+                => this.wait.For(
+                    () => this.browser.FindElements(By.CssSelector("li")).Select(x => x.FindElement(By.CssSelector("span")).Text).Should().BeEquivalentTo(students.Select(x => $"{x.StudentFirstname} {x.StundetLastname}"))));
+
+            "soll eine Liste vorhanden sein".x(()
+                => this.wait.For(
+                    () => this.browser.FindElements(By.CssSelector("li")).Select(x => x.FindElement(By.CssSelector("img")).Size).Should().AllBeEquivalentTo(new Size(533, 800))));
+
+            "soll der richtige Kurs abgerufen werden".x(()
+                => this.backend.GetCourseId.Should().Be(course.Id));
+
+            "sollen die Studenten für den richtigen Kurs abgerufen werden".x(()
+                => this.backend.GetStudentsByCourseId.Should().Be(course.Id));
+
+            "soll der Kurs-Name vorhanden sein".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector("h1")).Text.Should().Contain(course.Name)));
         }
 
         [Scenario]
@@ -169,15 +214,37 @@
             "sollen die Daten gespeichert werden".x(()
                 =>
             {
-                this.backend.SavedSelfie.CourseId.Should().Be(course.Id);
-                this.backend.SavedSelfie.StudentFirstname.Should().Be("MeinVorname");
-                this.backend.SavedSelfie.StundetLastname.Should().Be("MeinNachname");
+                this.backend.SavedStudent.CourseId.Should().Be(course.Id);
+                this.backend.SavedStudent.StudentFirstname.Should().Be("MeinVorname");
+                this.backend.SavedStudent.StundetLastname.Should().Be("MeinNachname");
                 
-                var byteArray = Convert.FromBase64String(this.backend.SavedSelfie.ImageInBase64);
+                var byteArray = Convert.FromBase64String(this.backend.SavedStudent.ImageInBase64);
                 var memStream = new MemoryStream(byteArray);
                 var image = new Bitmap(memStream);
                 image.Size.Should().Be(new Size(533, 800));
             });
+        }
+
+        private string GetImageAsBase64Jpeg(
+            string path,
+            int width,
+            int height)
+        {
+            using (var fileStream = File.OpenRead(path))
+            {
+                using (var original = new Bitmap(fileStream))
+                {
+                    using (var resized = new Bitmap(original, width, height))
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            resized.Save(memoryStream, ImageFormat.Jpeg);
+
+                            return Convert.ToBase64String(memoryStream.ToArray());
+                        }
+                    }
+                }
+            }
         }
     }
 }

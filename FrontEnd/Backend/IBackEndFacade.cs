@@ -14,7 +14,10 @@
         
         Task<Course> GetCourse(Guid id);
 
-        Task CreateSelfie(
-            Selfie selfie);
+        Task CreateStudent(
+            Student student);
+
+        Task<IReadOnlyCollection<Student>> GetStudents(
+            Guid courseId);
     }
 }

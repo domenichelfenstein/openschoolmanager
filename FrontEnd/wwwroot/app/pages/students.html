@@ -1,0 +1,36 @@
+<h1></h1>
+<ul>
+
+</ul>
+<script>
+    function getCourse() {
+        var currentUrl = document.URL,
+        urlParts   = currentUrl.split('#students/');
+            
+        return (urlParts.length > 1) ? urlParts[1] : null;
+    }
+
+    var course = getCourse();
+    fetch("/api/courses/" + course + "/students")
+        .then(r => r.json())
+        .then(json => {
+            document.querySelector("h1").innerText = json.courseName;
+            var ul = document.querySelector("ul");
+
+            for (let i = 0; i < json.students.length; i++) {
+                const student = json.students[i];
+                
+                var li = document.createElement("li");
+
+                var span = document.createElement("span");
+                span.innerText = `${student.studentFirstname} ${student.stundetLastname}`;
+                li.appendChild(span);
+                
+                var img = document.createElement("img");
+                img.src = `data:image/jpg;base64,${student.imageInBase64}`;
+                li.appendChild(img);
+
+                ul.appendChild(li);
+            }
+        });
+</script>

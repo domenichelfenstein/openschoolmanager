@@ -18,10 +18,10 @@
 
         [HttpPost]
         public async Task<IActionResult> Post(
-            [FromBody]Selfie selfie)
+            [FromBody]Student student)
         {
-            await this.backend.CreateSelfie(
-                selfie);
+            await this.backend.CreateStudent(
+                student);
 
             return this.Ok();
         }

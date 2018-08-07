@@ -21,7 +21,12 @@
             return null;
         }
 
-        public Task CreateSelfie(Selfie selfie)
+        public Task CreateStudent(Student student)
+        {
+            return null;
+        }
+
+        public Task<IReadOnlyCollection<Student>> GetStudents(Guid courseId)
         {
             return null;
         }

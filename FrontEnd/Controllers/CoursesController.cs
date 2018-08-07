@@ -49,6 +49,25 @@ namespace FrontEnd.Controllers
                 id);
         }
 
+        
+
+        [HttpGet]
+        [Route("{id}/students")]
+        public async Task<StudentsInCourse> GetStudents(
+            [FromRoute]Guid id)
+        {
+            var course = await this.backend.GetCourse(
+                id);
+
+            var students = await this.backend.GetStudents(
+                id);
+
+            return new StudentsInCourse(
+                    course.Id,
+                    course.Name,
+                    students);
+        }
+
         public struct Create
         {
             public Create(string name)
@@ -57,6 +76,22 @@ namespace FrontEnd.Controllers
             }
 
             public string Name { get; }
+        }
+
+        public struct StudentsInCourse
+        {
+            public StudentsInCourse(Guid courseId, string courseName, IReadOnlyCollection<Student> students)
+            {
+                this.CourseId = courseId;
+                this.CourseName = courseName;
+                this.Students = students;
+            }
+
+            public Guid CourseId { get; }
+
+            public string CourseName { get; }
+
+            public IReadOnlyCollection<Student> Students { get; }
         }
     }
 }
