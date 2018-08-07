@@ -1,5 +1,13 @@
-﻿var loadCourses = () => {
-    fetch("../api/courses")
+<h1>Kurse</h1>
+<div class="input-group" style="max-width: 400px">
+    <input type="text" class="form-input" placeholder="Kursname">
+    <button class="btn btn-primary input-group-btn">
+        <i class="icon icon-plus"></i>
+    </button>
+</div>
+<script>
+var loadCourses = () => {
+    fetch("/api/courses")
         .then(r => r.json())
         .then(json => {
             var old = document.querySelector("ul.courses");
@@ -23,7 +31,7 @@ loadCourses();
 document.querySelector("button").onclick = () => {
     var input = document.querySelector("input");
     var name = input.value;
-    postData("../api/courses", { name: name })
+    postData("/api/courses", { name: name })
         .then(() => {
             input.value = "";
             loadCourses();
@@ -48,3 +56,4 @@ const postData = (url = ``, data = {}) => {
         .then(response => response.json()) // parses response to JSON
         .catch(error => console.error(`Fetch Error =\n`, error));
 };
+</script>

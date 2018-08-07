@@ -26,11 +26,21 @@
                 this.Courses);
         }
 
+        public Task<Course> GetCourse(Guid id)
+        {
+            this.GetCourseId = id;
+            return Task.FromResult(this.Course);
+        }
+
         public string CreateCourseName { get; private set; }
 
         public Guid CreateCourseId { get; private set; }
 
         public Course[] Courses { get; set; }
+
+        public Course Course { get; set; }
+
+        public Guid GetCourseId { get; private set; }
 
         public void OnAddCourse(Action<string> func)
         {

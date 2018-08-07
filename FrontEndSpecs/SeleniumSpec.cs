@@ -34,7 +34,7 @@
 
                 this.wait = new WebDriverWait(
                     this.browser,
-                    TimeSpan.FromSeconds(5));
+                    TimeSpan.FromSeconds(60));
                 this.wait.PollingInterval = TimeSpan.FromMilliseconds(100);
             }).Teardown(() =>
             {

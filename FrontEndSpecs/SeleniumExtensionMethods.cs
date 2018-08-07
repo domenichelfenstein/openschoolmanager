@@ -1,8 +1,11 @@
 ﻿namespace FrontEnd
 {
     using System;
+    using System.IO;
     using System.Threading.Tasks;
+    using FluentAssertions;
     using OpenQA.Selenium;
+    using OpenQA.Selenium.Support.Extensions;
     using OpenQA.Selenium.Support.UI;
 
     public static class SeleniumExtensionMethods
@@ -56,6 +59,22 @@
             if (lastException != null)
             {
                 throw lastException;
+            }
+        }
+
+        public static void ScanForQrCodeContaining(
+            this IWebDriver driver,
+            string text)
+        {
+            var coreCompatReader = new ZXing.CoreCompat.System.Drawing.BarcodeReader();
+            var pngScreenshot = driver.TakeScreenshot().AsByteArray;
+            using (var stream = new MemoryStream(pngScreenshot))
+            {
+                using (var bitmap = new System.Drawing.Bitmap(stream))
+                {
+                    var qrCode = coreCompatReader.Decode(bitmap);
+                    qrCode.Text.Should().Contain(text);
+                }
             }
         }
     }

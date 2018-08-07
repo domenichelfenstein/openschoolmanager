@@ -74,12 +74,16 @@
         {
             var courses = new []
             {
-                new Course("test1"), 
-                new Course("test2")
+                new Course(
+                    Guid.Parse("530AB197-0277-4F1A-B799-D87DB1D1DC6E"),
+                    "test1"), 
+                new Course(
+                    Guid.Parse("7EE63CF7-6182-4111-853B-A9F70D76FBCC"),
+                    "test2")
             };
             var expectedBody = $@"[
-                {{ 'name': '{courses[0].Name}' }},
-                {{ 'name': '{courses[1].Name}' }}
+                {{ 'id': '{courses[0].Id}', 'name': '{courses[0].Name}' }},
+                {{ 'id': '{courses[1].Id}', 'name': '{courses[1].Name}' }}
             ]";
 
             "_".x(()

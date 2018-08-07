@@ -1,0 +1,35 @@
+<h1></h1>
+<qr-code data="" format="svg" style="display: none"></qr-code>
+
+<!-- Polyfills -->
+<script src="app/webcomponents-loader.js"></script>
+<script src="app/custom-elements-es5-adapter.js"></script>
+
+<!-- 3rd Party -->
+<script src="app/qr-code.js"></script>
+<script>
+    function getCourse() {
+        var currentUrl = document.URL,
+        urlParts   = currentUrl.split('#courses/');
+            
+        return (urlParts.length > 1) ? urlParts[1] : null;
+    }
+
+    function getServerUrl() {
+        return document.URL.split('frontend/')[0];
+    }
+
+    var course = getCourse();
+    fetch("/api/courses/" + course)
+        .then(r => r.json())
+        .then(json => {
+            document.querySelector("h1").innerText = json.name;
+
+            var serverUrl = getServerUrl();
+            var linkUrl = serverUrl + "/frontend/#takeselfie/" + json.id;
+
+            var qrCode = document.querySelector("qr-code");
+            qrCode.data = linkUrl;
+            qrCode.style.display = "block";
+        });
+</script>

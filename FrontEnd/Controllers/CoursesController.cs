@@ -3,6 +3,7 @@ namespace FrontEnd.Controllers
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Backend;
     using Microsoft.AspNetCore.Mvc;
@@ -38,6 +39,15 @@ namespace FrontEnd.Controllers
             var courses = await this.backend.GetAllCourses();
 
             return courses;
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<Course> Get(
+            [FromRoute]Guid id)
+        {
+            return await this.backend.GetCourse(
+                id);
         }
 
         public struct Create

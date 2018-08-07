@@ -11,5 +11,7 @@
             Guid id);
 
         Task<IReadOnlyCollection<Course>> GetAllCourses();
+        
+        Task<Course> GetCourse(Guid id);
     }
 }

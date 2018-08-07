@@ -18,11 +18,14 @@
     <PackageReference Include="Selenium.PhantomJS.WebDriver" Version="2.1.1" />
     <PackageReference Include="Selenium.Support" Version="3.14.0" />
     <PackageReference Include="Selenium.WebDriver" Version="3.14.0" />
+    <!--<PackageReference Include="System.Drawing.Common" Version="4.5.0" />-->
     <PackageReference Include="Xbehave.Core" Version="2.3.1" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.1.1" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
+    <PackageReference Include="ZXing.Net" Version="0.16.4" />
+    <PackageReference Include="ZXing.Net.Bindings.CoreCompat.System.Drawing" Version="0.16.5-beta" />
   </ItemGroup>
 
   <ItemGroup>

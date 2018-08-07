@@ -15,5 +15,10 @@
         {
             return null;
         }
+
+        public Task<Course> GetCourse(Guid id)
+        {
+            return null;
+        }
     }
 }
