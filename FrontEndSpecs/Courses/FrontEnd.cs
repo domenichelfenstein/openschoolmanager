@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Backend;
     using FluentAssertions;
     using OpenQA.Selenium;
@@ -12,7 +13,10 @@
         [Scenario]
         public void KurseAufrufen()
         {
-            var newItemName = "mytest3";
+            var newCourseName = "mytest3";
+            var newCourse = new Course(
+                Guid.Parse("CAECCA78-2706-4E5B-B3D8-FC91C77F62C9"),
+                newCourseName);
 
             "es existieren Kurse".x(()
                 => this.backend.Courses = new[]
@@ -24,6 +28,9 @@
                             Guid.Parse("A96314FA-6B59-4164-95EB-3F8F955F019A"),
                             "test2")
                     });
+
+            "Fake: Einzelkurs kann zurückgegeben werden".x(()
+                => this.backend.Course = newCourse);
 
             "_".x(() => this.backend.OnAddCourse(
                 c => this.backend.Courses = new List<Course>(this.backend.Courses) { new Course(Guid.NewGuid(), c) }.ToArray()));
@@ -41,8 +48,8 @@
                 => this.wait.For(
                     () => this.browser.FindElement(By.CssSelector("li")).Text.Should().Contain("test1")));
 
-            $"wenn als neuer Kurs-Name `{newItemName}` eingetragen wird".x(()
-                => this.browser.FindElement(By.CssSelector("input")).SendKeys(newItemName));
+            $"wenn als neuer Kurs-Name `{newCourseName}` eingetragen wird".x(()
+                => this.browser.FindElement(By.CssSelector("input")).SendKeys(newCourseName));
 
             "wenn auf den Hinzufügen-Button geklickt wird".x(()
                 => this.browser.FindElement(By.CssSelector("button")).Click());
@@ -51,13 +58,20 @@
                 => this.wait.For(
                     () => this.browser.FindElements(By.CssSelector("li")).Should().HaveCount(3)));
 
-            $"soll der neue Kurs `{newItemName}` heissen".x(()
+            $"soll der neue Kurs `{newCourseName}` heissen".x(()
                 => this.wait.For(
-                    () => this.browser.FindElements(By.CssSelector("li")).Should().Contain(e => e.Text == newItemName)));
+                    () => this.browser.FindElements(By.CssSelector("li")).Should().Contain(e => e.Text == newCourseName)));
 
             "soll das Eingabefeld leer sein".x(()
                 => this.wait.For(
                     () => this.browser.FindElement(By.CssSelector("input")).GetAttribute("value").Should().BeEmpty()));
+
+            "wenn auf ein Kurs geklickt wird".x(()
+                => this.browser.FindElements(By.CssSelector("a")).Last().Click());
+
+            "soll auf die Admin-Kurs-Seite weitergeleitet werden".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector("h1")).Text.Should().Be(newCourseName)));
         }
 
         [Scenario]

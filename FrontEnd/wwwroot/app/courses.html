@@ -6,6 +6,10 @@
     </button>
 </div>
 <script>
+function getServerUrl() {
+    return document.URL.split('frontend/')[0];
+}
+
 var loadCourses = () => {
     fetch("/api/courses")
         .then(r => r.json())
@@ -15,14 +19,18 @@ var loadCourses = () => {
                 old.remove();
             }
 
-            var ul = document.createElement("UL");
+            var ul = document.createElement("ul");
             ul.classList.add("courses");
             for (var i = 0; i < json.length; i++) {
-                var li = document.createElement("LI");
-                li.innerText = json[i].name;
+                var a = document.createElement("a");
+                var li = document.createElement("li");
+                a.innerText = json[i].name;
+                a.href = getServerUrl() + "frontend/#courses/" + json[i].id;
+
+                li.appendChild(a);
                 ul.appendChild(li);
             }
-            document.body.appendChild(ul);
+            document.querySelector(".app").appendChild(ul);
         });
 }
 
