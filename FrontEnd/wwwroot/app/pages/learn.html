@@ -1,0 +1,39 @@
+<img />
+<span class="name"></span>
+<button type="button"></button>
+<script>
+    function getCourse() {
+        var currentUrl = document.URL,
+        urlParts   = currentUrl.split('#learn/');
+            
+        return (urlParts.length > 1) ? urlParts[1] : null;
+    }
+
+    var img = document.querySelector("img");
+    var name = document.querySelector(".name");
+    var button = document.querySelector("button");
+
+    var course = getCourse();
+    var loadStudentToLearn = function() {
+        fetch("/api/courses/" + course + "/students/learn")
+            .then(r => r.json())
+            .then(json => {
+                var currentStundet = json;
+                img.src = `data:image/jpg;base64,${currentStundet.imageInBase64}`;
+                name.innerText = `${currentStundet.firstname} ${currentStundet.lastname}`;
+
+                img.style.display = "inline";
+                name.style.display = "none";
+            });
+    }
+    loadStudentToLearn();
+    
+    img.onclick = function() {
+        img.style.display = "none";
+        name.style.display = "inline";
+    }
+
+    button.onclick = function() {
+        loadStudentToLearn();
+    }
+</script>

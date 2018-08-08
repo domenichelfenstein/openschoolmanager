@@ -2,6 +2,7 @@ var routes = [
     { from: /courses\/.*/,      to: "app/pages/course.html" },
     { from: /students\/.*/,   to: "app/pages/students.html" },
     { from: /takeselfie\/.*/,   to: "app/pages/takeselfie.html" },
+    { from: /learn\/.*/,   to: "app/pages/learn.html" },
     { from: /^$/,               to: "app/pages/courses.html" },
     { from: /.*/,               to: "app/pages/pagenotfound.html" }
 ];

@@ -49,8 +49,6 @@ namespace FrontEnd.Controllers
                 id);
         }
 
-        
-
         [HttpGet]
         [Route("{id}/students")]
         public async Task<StudentsInCourse> GetStudents(
@@ -66,6 +64,17 @@ namespace FrontEnd.Controllers
                     course.Id,
                     course.Name,
                     students);
+        }
+
+        [HttpGet]
+        [Route("{id}/students/learn")]
+        public async Task<Student> LearnStudent(
+            [FromRoute]Guid id)
+        {
+            var student = await this.backend.GetNextStudentToLearn(
+                id);
+
+            return student;
         }
 
         public struct Create

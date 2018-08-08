@@ -46,6 +46,11 @@
                 this.Students);
         }
 
+        public Task<Student> GetNextStudentToLearn(Guid courseId)
+        {
+            return Task.FromResult(this.StudentToLearn);
+        }
+
         public string CreateCourseName { get; private set; }
 
         public Guid CreateCourseId { get; private set; }
@@ -61,6 +66,8 @@
         public Student[] Students { get; set; }
 
         public Guid GetStudentsByCourseId { get; set; }
+        
+        public Student StudentToLearn { get; set; }
 
         public void OnAddCourse(Action<string> func)
         {

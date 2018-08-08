@@ -151,6 +151,84 @@
         }
 
         [Scenario]
+        public void Lernen()
+        {
+            var course = new Course(
+                Guid.Parse("CAECCA78-2706-4E5B-B3D8-FC91C77F62C9"),
+                "test1");
+
+            var portraitPath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "Data",
+                "portrait.jpg");
+
+            var base64 = GetImageAsBase64Jpeg(
+                portraitPath,
+                533,
+                800);
+
+            var student = new Student(course.Id, "Max", "Mustermann", base64);
+
+            "es existieren Kurse".x(()
+                => this.backend.Course = course);
+
+            "es existieren Schüler".x(()
+                => this.backend.StudentToLearn = student);
+
+            "wenn die Kurs-Seite aufgerufen wird".x(()
+                => this.browser.Open(
+                    this.server,
+                    $"/frontend/#courses/{course.Id}"));
+
+            "_".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector("h1")).Text.Should().Contain(course.Name)));
+
+            "soll ein Link zur Student-Übersicht enthalten sein".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector("a.learning")).Text.Should().Contain("Lernen")));
+
+            "wenn auf den Link geklickt wird".x(()
+                => this.browser.FindElement(By.CssSelector("a.learning")).Click());
+
+            "soll ein Bild eines Schülers erscheinen".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector("img")).Size.Should().Be(new Size(533, 800))));
+
+            "soll kein Name vorhanden sein".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector(".name")).Displayed.Should().BeFalse()));
+
+            "wenn auf das Bild geklickt wird".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector("img")).Click()));
+
+            "soll das Bild verschwinden".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector("img")).Displayed.Should().BeFalse()));
+
+            "soll der Name erscheinen".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector(".name")).Displayed.Should().BeTrue()));
+
+            "soll der Name erscheinen (2)".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector(".name")).Text.Should().Be($"{student.Firstname} {student.Lastname}")));
+
+            "wenn auf den Button geklickt wird".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector("button")).Click()));
+
+            "soll ein Bild eines Schülers erscheinen".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector("img")).Displayed.Should().BeTrue()));
+
+            "soll kein Name vorhanden sein".x(()
+                => this.wait.For(
+                    () => this.browser.FindElement(By.CssSelector(".name")).Displayed.Should().BeFalse()));
+        }
+
+        [Scenario]
         public void UnbekannteSeite()
         {
             "wenn eine unbekannte Seite aufgerufen wird".x(()

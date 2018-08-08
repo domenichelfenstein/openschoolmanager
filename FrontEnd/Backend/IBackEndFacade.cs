@@ -19,5 +19,8 @@
 
         Task<IReadOnlyCollection<Student>> GetStudents(
             Guid courseId);
+
+        Task<Student> GetNextStudentToLearn(
+            Guid courseId);
     }
 }

@@ -1,6 +1,7 @@
 <h1></h1>
 <qr-code data="" format="svg" style="display: none"></qr-code>
 <a class="students">Übersicht</a>
+<a class="learning">Lernen</a>
 
 <script src="lib/webcomponents-loader.js"></script>
 <script src="lib/custom-elements-es5-adapter.js"></script>
@@ -22,6 +23,9 @@
     fetch("/api/courses/" + course)
         .then(r => r.json())
         .then(json => {
+            document.querySelector(".students").href = "#students/" + json.id;
+            document.querySelector(".learning").href = "#learn/" + json.id;
+
             document.querySelector("h1").innerText = json.name;
 
             var serverUrl = getServerUrl();
@@ -30,7 +34,5 @@
             var qrCode = document.querySelector("qr-code");
             qrCode.data = linkUrl;
             qrCode.style.display = "block";
-
-            document.querySelector("a").href = "#students/" + json.id;
         });
 </script>

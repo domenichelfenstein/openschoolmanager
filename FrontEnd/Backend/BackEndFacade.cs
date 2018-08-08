@@ -30,5 +30,10 @@
         {
             return null;
         }
+
+        public Task<Student> GetNextStudentToLearn(Guid courseId)
+        {
+            return null;
+        }
     }
 }
