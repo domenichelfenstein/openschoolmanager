@@ -1,9 +1,20 @@
-<h1></h1>
-<input type="text" name="firstName" />
-<input type="text" name="lastName" />
-<input type="file" capture="camera" accept="image/*" name="selfie" />
-<img class="img-container" />
-<button type="button">OK</button>
+<div class="with-padding">
+    <h1></h1>
+    <form class="form-group actual">
+        <p>
+            Hallo!<br />
+            Mach doch bitte kurz ein Selfie von dir. Vielen herzlichen Dank!
+        </p>
+        <input type="text" class="form-input" name="firstName" placeholder="Vorname" />
+        <input type="text" class="form-input" name="lastName" placeholder="Nachname" />
+        <input type="file" capture="camera" accept="image/*" name="selfie" />
+        <img class="img-container" style="display: none" />
+        <button type="button" class="btn btn-primary">OK</button>
+    </form>
+    <div class="spinner text-center" style="display: none">
+        <i class="form-icon loading loading-lg"></i>
+    </div>
+</div>
 
 <script src="lib/posting.js"></script>
 <script>
@@ -11,7 +22,7 @@
 
     function getCourse() {
         var currentUrl = document.URL,
-        urlParts   = currentUrl.split('#courses/');
+        urlParts   = currentUrl.split('#takeselfie/');
             
         return (urlParts.length > 1) ? urlParts[1] : null;
     }
@@ -79,9 +90,13 @@
             imageInBase64: toBase64(document.querySelector("img")),
         };
 
+        document.querySelector(".actual").style.display = "none";
+        document.querySelector(".spinner").style.display = "block";
+
         postData("/api/selfies", body)
-        .then(() => {
-            document.querySelector("h1").innerText = "Geklappt! Danke!";
-        });
+            .then(() => {
+                document.querySelector("h1").innerText = "Vielen Dank!";
+                document.querySelector(".spinner").style.display = "none";
+            });
     }
 </script>

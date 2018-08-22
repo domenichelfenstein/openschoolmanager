@@ -1,0 +1,41 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body {
+    display: flex;
+}
+
+.with-padding {
+    padding: 1em;
+}
+
+form {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+form input {
+    margin-bottom: 1em;
+}
+
+input[type="file"] {
+    width: 100%;
+}
+
+form button {
+    min-width: 10em;
+}
+
+.app {
+    flex: 1 1 auto;
+}
+
+.course-qr {
+    border-left: 4em solid rgb(68, 114, 196);
+    padding-left: 1em;
+    height: 100%;
+}
